@@ -50,6 +50,15 @@ class Board
   def draw?
     false
   end
+
+  def to_s
+    grid.each do |arr|
+      arr.each do |cell|
+        print cell.value + ' '
+      end
+      puts
+    end
+  end
 end
 
 # class Game
@@ -59,5 +68,49 @@ class Game
     @players = players
     @board = board
     @current_player, @other_player = players.shuffle
+  end
+
+  def play
+    puts "#{current_player.name} is selected as the first player!"
+    while true
+      puts board
+      puts "#{current_player.name}'s turn(Enter a number between 1 - 9): "
+      x, y = get_move(gets.chomp)
+      board.set_value(x, y, current_player.color)
+      if game_over
+        game_over_message
+        puts board
+        return
+      end
+      switch_players
+    end
+  end
+
+  def switch_players
+    @current_player, @other_player = @other_player, @current_player
+  end
+
+  def get_move(human_move)
+    human_move_to_coordinate(human_move)
+  end
+
+  def human_move_to_coordinate(human_move)
+    mapping = {
+      '1' => [0, 0],
+      '2' => [0, 1],
+      '3' => [0, 2],
+      '4' => [1, 0],
+      '5' => [1, 1],
+      '6' => [1, 2],
+      '7' => [2, 0],
+      '8' => [2, 1],
+      '9' => [2, 2]
+    }
+    mapping[human_move]
+  end
+
+  def game_over_message
+    puts "#{current_player.name} WINS!" if game_over == 'winner'
+    puts 'The game ends in a draw.' if game_over == 'draw'
   end
 end
