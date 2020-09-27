@@ -27,4 +27,12 @@ class Board
   def default_grid
     Array.new(3) { Array.new(3) { Cell.new } }
   end
+
+  def set_value(row, column, value)
+    grid(row, column).value = value
+  end
+
+  def get_value(row, column)
+    grid(row, column)
+  end
 end
