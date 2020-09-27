@@ -16,3 +16,15 @@ class Player
     @color = color
   end
 end
+
+# class Board
+class Board
+  attr_reader :grid
+  def initialize(grid = default_grid)
+    @grid = grid
+  end
+
+  def default_grid
+    Array.new(3) { Array.new(3) { Cell.new } }
+  end
+end
