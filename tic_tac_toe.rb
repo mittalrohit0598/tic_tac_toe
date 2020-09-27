@@ -3,7 +3,7 @@
 # class Cell
 class Cell
   attr_accessor :value
-  def initialize(value = '')
+  def initialize(value = '_')
     @value = value
   end
 end
@@ -29,11 +29,11 @@ class Board
   end
 
   def set_value(row, column, value)
-    grid(row, column).value = value
+    get_cell(row, column).value = value
   end
 
-  def get_value(row, column)
-    grid(row, column)
+  def get_cell(row, column)
+    grid[row][column]
   end
 
   def game_over
@@ -51,7 +51,7 @@ class Board
     false
   end
 
-  def to_s
+  def print_grid
     grid.each do |arr|
       arr.each do |cell|
         print cell.value + ' '
@@ -73,13 +73,13 @@ class Game
   def play
     puts "#{current_player.name} is selected as the first player!"
     while true
-      puts board
+      board.print_grid
       puts "#{current_player.name}'s turn(Enter a number between 1 - 9): "
       x, y = get_move(gets.chomp)
       board.set_value(x, y, current_player.color)
-      if game_over
+      if board.game_over
         game_over_message
-        puts board
+        board.print_grid
         return
       end
       switch_players
@@ -110,7 +110,12 @@ class Game
   end
 
   def game_over_message
-    puts "#{current_player.name} WINS!" if game_over == 'winner'
-    puts 'The game ends in a draw.' if game_over == 'draw'
+    puts "#{current_player.name} WINS!" if board.game_over == 'winner'
+    puts 'The game ends in a draw.' if board.game_over == 'draw'
   end
 end
+
+bob = Player.new('bob', 'x')
+stan = Player.new('stan', 'o')
+game = Game.new([bob, stan])
+game.play
