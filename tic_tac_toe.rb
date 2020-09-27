@@ -35,4 +35,11 @@ class Board
   def get_value(row, column)
     grid(row, column)
   end
+
+  def game_over
+    return 'winner' if winner?
+    return 'draw' if draw?
+
+    false
+  end
 end
