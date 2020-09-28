@@ -29,11 +29,7 @@ class Board
   end
 
   def set_value(row, column, value)
-    get_cell(row, column).value = value
-  end
-
-  def get_cell(row, column)
-    grid[row][column]
+    get_cell[row, column].value = value
   end
 
   def game_over
