@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+# class Array
+class Array
+  def all_same?
+    self.all? { |n| n == self[0] }
+  end
+end
+
 # class Cell
 class Cell
   attr_accessor :value
@@ -29,7 +36,7 @@ class Board
   end
 
   def set_value(row, column, value)
-    get_cell[row, column].value = value
+    grid[row][column].value = value
   end
 
   def game_over
@@ -40,7 +47,51 @@ class Board
   end
 
   def winner?
-    true
+    return true if horizontal_check?(grid)
+    return true if vertical_check?
+    return true if diagonal_up_check?
+    return true if diagonal_down_check?
+
+    false
+  end
+
+  def horizontal_check?(grid)
+    grid.each do |arr|
+      arr[0...arr.length - 3 + 1].each_index do |i|
+        return true if arr[i, 3].map(&:value).all_same? && arr[i].value != '_'
+      end
+    end
+    false
+  end
+
+  def vertical_check?
+    horizontal_check?(grid.transpose)
+  end
+
+  def diagonal_down_check?
+    grid[0...grid.length - 3 + 1].each_with_index do |arr, i|
+      arr.each_index do |j|
+        diagonal_array = []
+        3.times do |k|
+          diagonal_array << grid[i + k][j + k]
+        end
+        return true if diagonal_array.map { |cell| cell.value if cell != nil}.all_same? && diagonal_array[i].value != '_'
+      end
+    end
+    false
+  end
+
+  def diagonal_up_check?
+    (3 - 1...grid.length).reverse_each do |i|
+      grid[i].each_index do |j|
+        diagonal_array = []
+        3.times do |k|
+          diagonal_array << grid[i - k][j + k]
+        end
+        return true if diagonal_array.map { |cell| cell.value if cell != nil}.all_same? && diagonal_array[i].value != '_'
+      end
+    end
+    false
   end
 
   def draw?
