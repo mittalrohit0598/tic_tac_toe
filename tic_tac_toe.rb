@@ -3,7 +3,11 @@
 # class Array
 class Array
   def all_same?
-    self.all? { |n| n == self[0] }
+    all? { |n| n == self[0] }
+  end
+
+  def none_empty?
+    all? { |n| n != '_'}
   end
 end
 
@@ -95,7 +99,7 @@ class Board
   end
 
   def draw?
-    false
+    grid.flatten.map(&:value).none_empty?
   end
 
   def print_grid
