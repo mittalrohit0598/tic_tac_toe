@@ -7,7 +7,7 @@ class Array
   end
 
   def none_empty?
-    all? { |n| n != '_'}
+    all? { |n| n != '_' }
   end
 end
 
@@ -73,26 +73,26 @@ class Board
   end
 
   def diagonal_down_check?
-    grid[0...grid.length - 3 + 1].each_with_index do |arr, i|
+    grid[0...grid.length - 2].each_with_index do |arr, i|
       arr.each_index do |j|
         diagonal_array = []
         3.times do |k|
-          diagonal_array << grid[i + k][j + k]
+          diagonal_array << grid[i + k][j + k]&.value
         end
-        return true if diagonal_array.map { |cell| cell.value if cell != nil}.all_same? && diagonal_array[i].value != '_'
+        return true if diagonal_array.all_same? && diagonal_array[i].value != '_'
       end
     end
     false
   end
 
   def diagonal_up_check?
-    (3 - 1...grid.length).reverse_each do |i|
+    (2...grid.length).reverse_each do |i|
       grid[i].each_index do |j|
         diagonal_array = []
         3.times do |k|
-          diagonal_array << grid[i - k][j + k]
+          diagonal_array << grid[i - k][j + k]&.value
         end
-        return true if diagonal_array.map { |cell| cell.value if cell != nil}.all_same? && diagonal_array[i].value != '_'
+        return true if diagonal_array.all_same? && diagonal_array[i].value != '_'
       end
     end
     false
@@ -123,7 +123,7 @@ class Game
 
   def play
     puts "#{current_player.name} is selected as the first player!"
-    while true
+    loop do
       board.print_grid
       puts "#{current_player.name}'s turn(Enter a number between 1 - 9): "
       x, y = get_move(gets.chomp)
