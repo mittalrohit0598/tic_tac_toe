@@ -79,7 +79,7 @@ class Board
         3.times do |k|
           diagonal_array << grid[i + k][j + k]&.value
         end
-        return true if diagonal_array.all_same? && diagonal_array[i].value != '_'
+        return true if diagonal_array.all_same? && diagonal_array[i] != '_'
       end
     end
     false
@@ -92,7 +92,7 @@ class Board
         3.times do |k|
           diagonal_array << grid[i - k][j + k]&.value
         end
-        return true if diagonal_array.all_same? && diagonal_array[i].value != '_'
+        return true if diagonal_array.all_same? && diagonal_array[i] != '_'
       end
     end
     false
@@ -124,15 +124,9 @@ class Game
   def play
     puts "#{current_player.name} is selected as the first player!"
     loop do
-      board.print_grid
-      puts "#{current_player.name}'s turn(Enter a number between 1 - 9): "
-      x, y = get_move(gets.chomp)
-      if board.grid[x][y].value == '_'
-        board.set_value(x, y, current_player.color)
-      else
-        puts 'Invalid move.'
-        next
-      end
+      solicit_move
+      x, y = get_move
+      board.set_value(x, y, current_player.color)
       if board.game_over
         game_over_message
         board.print_grid
@@ -146,8 +140,14 @@ class Game
     @current_player, @other_player = @other_player, @current_player
   end
 
-  def get_move(human_move)
-    human_move_to_coordinate(human_move)
+  def get_move(human_move = gets.chomp)
+    loop do
+      return human_move_to_coordinate(human_move) if invalid_move?(human_move)
+
+      puts 'Invalid move'
+      solicit_move
+      human_move = gets.chomp
+    end
   end
 
   def human_move_to_coordinate(human_move)
@@ -168,6 +168,19 @@ class Game
   def game_over_message
     puts "#{current_player.name} WINS!" if board.game_over == 'winner'
     puts 'The game ends in a draw.' if board.game_over == 'draw'
+  end
+
+  def solicit_move
+    board.print_grid
+    puts "#{current_player.name}'s turn(Enter a number between 1 - 9): "
+  end
+
+  def invalid_move?(human_move)
+    if (1..9).include?(human_move.to_i)
+      x, y = human_move_to_coordinate(human_move)
+      return true if board.grid[x][y].value == '_'
+    end
+    false
   end
 end
 
