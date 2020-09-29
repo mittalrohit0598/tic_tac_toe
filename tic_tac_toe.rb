@@ -127,7 +127,12 @@ class Game
       board.print_grid
       puts "#{current_player.name}'s turn(Enter a number between 1 - 9): "
       x, y = get_move(gets.chomp)
-      board.set_value(x, y, current_player.color)
+      if board.grid[x][y].value == '_'
+        board.set_value(x, y, current_player.color)
+      else
+        puts 'Invalid move.'
+        next
+      end
       if board.game_over
         game_over_message
         board.print_grid
