@@ -1,16 +1,5 @@
 # frozen_string_literal: true
 
-# class Array
-class Array
-  def all_same?
-    all? { |n| n == self[0] }
-  end
-
-  def none_empty?
-    all? { |n| n != '_' }
-  end
-end
-
 # class Cell
 class Cell
   attr_accessor :value
@@ -50,7 +39,7 @@ class Board
   def horizontal_check?(grid)
     grid.each do |arr|
       arr[0...arr.length - 3 + 1].each_index do |i|
-        return true if arr[i, 3].map(&:value).all_same? && arr[i].value != '_'
+        return true if arr[i, 3].map(&:value).all? { |n| n == arr[i] } && arr[i].value != '_'
       end
     end
     false
@@ -67,7 +56,7 @@ class Board
         3.times do |k|
           diagonal_array << grid[i + k][j + k]&.value
         end
-        return true if diagonal_array.all_same? && diagonal_array[i] != '_'
+        return true if diagonal_array.all? { |n| n == diagonal_array[0] } && diagonal_array[i] != '_'
       end
     end
     false
@@ -80,14 +69,14 @@ class Board
         3.times do |k|
           diagonal_array << grid[i - k][j + k]&.value
         end
-        return true if diagonal_array.all_same? && diagonal_array[i] != '_'
+        return true if diagonal_array.all? { |n| n == diagonal_array[0] } && diagonal_array[i] != '_'
       end
     end
     false
   end
 
   def draw?
-    grid.flatten.map(&:value).none_empty?
+    grid.flatten.map(&:value).all? { |n| n != '_' }
   end
 
   def print_grid
@@ -112,12 +101,10 @@ class Game
   def play
     puts "#{current_player.name} is selected as the first player!"
     loop do
-      solicit_move
-      x, y = get_move
+      x, y = move
       board.set_value(x, y, current_player.color)
       if board.winner? || board.draw?
         game_over_message
-        board.print_grid
         return
       end
       switch_players
@@ -128,13 +115,13 @@ class Game
     @current_player, @other_player = @other_player, @current_player
   end
 
-  def get_move(human_move = gets.chomp)
+  def move
     loop do
+      solicit_move
+      human_move = gets.chomp
       return human_move_to_coordinate(human_move) if invalid_move?(human_move)
 
       puts 'Invalid move'
-      solicit_move
-      human_move = gets.chomp
     end
   end
 
@@ -156,6 +143,7 @@ class Game
   def game_over_message
     puts "#{current_player.name} WINS!" if board.winner?
     puts 'The game ends in a draw.' if board.draw?
+    board.print_grid
   end
 
   def solicit_move
