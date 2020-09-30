@@ -43,20 +43,8 @@ class Board
     grid[row][column].value = value
   end
 
-  def game_over
-    return 'winner' if winner?
-    return 'draw' if draw?
-
-    false
-  end
-
   def winner?
-    return true if horizontal_check?(grid)
-    return true if vertical_check?
-    return true if diagonal_up_check?
-    return true if diagonal_down_check?
-
-    false
+    horizontal_check?(grid) || vertical_check? || diagonal_up_check? || diagonal_down_check?
   end
 
   def horizontal_check?(grid)
@@ -127,7 +115,7 @@ class Game
       solicit_move
       x, y = get_move
       board.set_value(x, y, current_player.color)
-      if board.game_over
+      if board.winner? || board.draw?
         game_over_message
         board.print_grid
         return
@@ -166,8 +154,8 @@ class Game
   end
 
   def game_over_message
-    puts "#{current_player.name} WINS!" if board.game_over == 'winner'
-    puts 'The game ends in a draw.' if board.game_over == 'draw'
+    puts "#{current_player.name} WINS!" if board.winner?
+    puts 'The game ends in a draw.' if board.draw?
   end
 
   def solicit_move
