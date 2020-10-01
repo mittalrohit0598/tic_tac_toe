@@ -24,16 +24,31 @@ class Board
     @grid = grid
   end
 
-  def default_grid
-    Array.new(3) { Array.new(3) { Cell.new } }
-  end
-
   def set_value(row, column, value)
     grid[row][column].value = value
   end
 
+  def print_grid
+    grid.each do |arr|
+      arr.each do |cell|
+        print cell.value + ' '
+      end
+      puts
+    end
+  end
+
   def winner?
     horizontal_check?(grid) || vertical_check? || diagonal_up_check? || diagonal_down_check?
+  end
+
+  def draw?
+    grid.flatten.map(&:value).all? { |n| n != '_' }
+  end
+
+  private
+
+  def default_grid
+    Array.new(3) { Array.new(3) { Cell.new } }
   end
 
   def horizontal_check?(grid)
@@ -74,19 +89,6 @@ class Board
     end
     false
   end
-
-  def draw?
-    grid.flatten.map(&:value).all? { |n| n != '_' }
-  end
-
-  def print_grid
-    grid.each do |arr|
-      arr.each do |cell|
-        print cell.value + ' '
-      end
-      puts
-    end
-  end
 end
 
 # class Game
@@ -110,6 +112,8 @@ class Game
       switch_players
     end
   end
+
+  private
 
   def switch_players
     @current_player, @other_player = @other_player, @current_player
