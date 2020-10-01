@@ -99,7 +99,7 @@ class Game
   end
 
   def play
-    puts "#{current_player.name} is selected as the first player!"
+    puts "#{current_player.name} is selected at random to make the first move!"
     loop do
       x, y = move
       board.set_value(x, y, current_player.color)
@@ -156,7 +156,12 @@ class Game
   end
 end
 
-bob = Player.new('bob', 'x')
-stan = Player.new('stan', 'o')
-game = Game.new([bob, stan])
+puts 'Enter name of player 1: '
+player1 = gets.chomp
+puts 'Enter name of player 2: '
+player2 = gets.chomp
+
+player1 = Player.new(player1, 'O')
+player2 = Player.new(player2, 'X')
+game = Game.new([player1, player2])
 game.play
