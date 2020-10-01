@@ -119,25 +119,21 @@ class Game
     loop do
       solicit_move
       human_move = gets.chomp
-      return human_move_to_coordinate(human_move) if invalid_move?(human_move)
+      return human_move_to_coordinate(human_move) unless invalid_move?(human_move)
 
       puts 'Invalid move'
     end
   end
 
   def human_move_to_coordinate(human_move)
-    mapping = {
-      '1' => [0, 0],
-      '2' => [0, 1],
-      '3' => [0, 2],
-      '4' => [1, 0],
-      '5' => [1, 1],
-      '6' => [1, 2],
-      '7' => [2, 0],
-      '8' => [2, 1],
-      '9' => [2, 2]
-    }
-    mapping[human_move]
+    mapping = []
+    3.times do |i|
+      3.times do |j|
+        mapping << [i, j]
+      end
+    end
+
+    mapping[human_move.to_i - 1]
   end
 
   def game_over_message
@@ -154,9 +150,9 @@ class Game
   def invalid_move?(human_move)
     if (1..9).include?(human_move.to_i)
       x, y = human_move_to_coordinate(human_move)
-      return true if board.grid[x][y].value == '_'
+      return false if board.grid[x][y].value == '_'
     end
-    false
+    true
   end
 end
 
