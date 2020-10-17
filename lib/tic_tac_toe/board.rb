@@ -40,9 +40,7 @@ class Board
 
   def horizontal_check?(grid)
     grid.each do |arr|
-      arr[0...arr.length - 3 + 1].each_index do |i|
-        return true if arr[i, 3].map(&:value).all? { |n| n == arr[i] } && arr[i].value != '_'
-      end
+      return true if arr.map(&:value).all? { |n| n == arr[0].value } && arr[0].value != '_'
     end
     false
   end
