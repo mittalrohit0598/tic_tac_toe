@@ -8,7 +8,11 @@ class Board
   end
 
   def set_value(row, column, value)
-    grid[row][column].value = value
+    get_value(row, column).value = value
+  end
+
+  def get_value(row, column)
+    grid[row][column]
   end
 
   def print_grid
